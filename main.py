@@ -1,5 +1,6 @@
 from flask import Flask, redirect
 from flask_restful import Resource, Api
+import json
 
 app = Flask(__name__)
 api = Api(app)
@@ -7,13 +8,16 @@ api = Api(app)
 
 count: int = 0
 
+with open('voters_per_user/voters_per_user.json') as f:
+    data = json.load(f)
+
 
 class Get(Resource):
     def get(self):
         global count
         ret = count
         count += 1
-        return {'count': ret}, 200
+        return {'username': data[count]['username'], 'fnummers': data[count]['fnummers']}, 200
 
 
 class Reset(Resource):
@@ -35,4 +39,5 @@ api.add_resource(Home, '/')
 
 if __name__ == '__main__':
     app.run()
+
 
